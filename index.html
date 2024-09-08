@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor de Texto A4</title>
+
+    <!-- Material Design Lite CSS -->
+    <link
+      rel="stylesheet"
+      href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <!-- Material Design Lite JS -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <style>
+      /* Forzar el ancho completo en todo el contenido */
+      .mdl-layout {
+        width: 100%;
+      }
+      .mdl-layout__content {
+        padding: 0; /* Sin márgenes internos para ocupar todo el espacio */
+        width: 100%; /* Asegurarse de ocupar todo el ancho */
+        display: flex;
+        justify-content: center; /* Centrar horizontalmente */
+      }
+
+      /* Área de trabajo con formato A4 */
+      .editor {
+        width: 794px; /* Ancho A4 en píxeles (210mm a 96 DPI) */
+        height: 1123px; /* Alto A4 en píxeles (297mm a 96 DPI) */
+        box-sizing: border-box; /* Para que el padding no afecte el tamaño */
+        border: 1px solid #ddd;
+        padding: 20px;
+        background-color: #fff;
+        margin-top: 20px;
+        white-space: pre-wrap;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra para dar apariencia de hoja */
+        overflow-y: auto;
+      }
+
+      /* Responsive - asegurar que en pantallas pequeñas el ancho se ajuste */
+      @media (max-width: 800px) {
+        .editor {
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      /* Estilo para mantener el menú de hamburguesa en pantallas pequeñas */
+      .mdl-layout__drawer {
+        background-color: indigo;
+      }
+
+      /* Asegurarse de que la barra de navegación también ocupe todo el ancho */
+      .mdl-layout__header {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Barra de navegación superior con menú de hamburguesa -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header
+        class="mdl-layout__header mdl-layout__header--scroll mdl-color--indigo"
+      >
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">Editor de Texto A4</span>
+          <div class="mdl-layout-spacer"></div>
+          <!-- Menú superior para pantallas grandes -->
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="#" onclick="setBold()"
+              ><i class="material-icons mdl-color-text--white"
+                >format_bold</i
+              ></a
+            >
+            <a class="mdl-navigation__link" href="#" onclick="setItalic()"
+              ><i class="material-icons mdl-color-text--white"
+                >format_italic</i
+              ></a
+            >
+            <a class="mdl-navigation__link" href="#" onclick="setFontSize()"
+              ><i class="material-icons mdl-color-text--white"
+                >format_size</i
+              ></a
+            >
+            <a class="mdl-navigation__link" href="#" onclick="setCenter()"
+              ><i class="material-icons mdl-color-text--white"
+                >format_align_center</i
+              ></a
+            >
+            <a class="mdl-navigation__link" href="#" onclick="openDocx()"
+              ><i class="material-icons mdl-color-text--white"
+                >folder_open</i
+              ></a
+            >
+            <a class="mdl-navigation__link" href="#" onclick="saveAsPDF()"
+              ><i class="material-icons mdl-color-text--white">save_alt</i></a
+            >
+            <!-- Selector de tipo de letra -->
+            <select
+              id="fontSelect"
+              class="mdl-navigation__link"
+              onchange="changeFont()"
+            >
+              <option value="Arial">Arial</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Menú de hamburguesa para pantallas pequeñas -->
+      <div class="mdl-layout__drawer mdl-color--indigo mdl-color-text--white">
+        <span class="mdl-layout-title">Editor de Texto A4</span>
+        <nav class="mdl-navigation">
+          <a
+            class="mdl-navigation__link mdl-color-text--white"
+            href="#"
+            onclick="setBold()"
+            ><i class="material-icons mdl-color-text--white">format_bold</i>
+            Negrita</a
+          >
+          <a
+            class="mdl-navigation__link mdl-color-text--white"
+            href="#"
+            onclick="setItalic()"
+            ><i class="material-icons mdl-color-text--white">format_italic</i>
+            Cursiva</a
+          >
+          <a
+            class="mdl-navigation__link mdl-color-text--white"
+            href="#"
+            onclick="setFontSize()"
+            ><i class="material-icons mdl-color-text--white">format_size</i>
+            Tamaño Letra</a
+          >
+          <a
+            class="mdl-navigation__link mdl-color-text--white"
+            href="#"
+            onclick="setCenter()"
+            ><i class="material-icons mdl-color-text--white"
+              >format_align_center</i
+            >
+            Centrar Texto</a
+          >
+          <a
+            class="mdl-navigation__link mdl-color-text--white"
+            href="#"
+            onclick="openDocx()"
+            ><i class="material-icons mdl-color-text--white">folder_open</i>
+            Abrir Docx</a
+          >
+          <a
+            class="mdl-navigation__link mdl-color-text--white"
+            href="#"
+            onclick="saveAsPDF()"
+            ><i class="material-icons mdl-color-text--white">save_alt</i>
+            Guardar como PDF</a
+          >
+        </nav>
+      </div>
+
+      <!-- Contenido principal: Editor de texto con formato A4 -->
+      <main class="mdl-layout__content">
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--12-col">
+            <div id="editor" class="editor" contenteditable="true">
+              Escribe aquí...
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- jsPDF for saving as PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- docx.js for opening docx -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/6.0.0/docx.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const editor = document.getElementById("editor");
+
+        // Quitar el texto de marcador cuando el editor recibe foco
+        editor.addEventListener("focus", function () {
+          if (editor.innerText.trim() === "Escribe aquí...") {
+            editor.innerText = "";
+          }
+        });
+
+        // Volver a mostrar el texto si está vacío al perder el foco
+        editor.addEventListener("blur", function () {
+          if (editor.innerText.trim() === "") {
+            editor.innerText = "Escribe aquí...";
+          }
+        });
+      });
+
+      // Funciones para formato de texto
+      function setBold() {
+        document.execCommand("bold");
+        focusEditor();
+      }
+
+      function setItalic() {
+        document.execCommand("italic");
+        focusEditor();
+      }
+
+      function setFontSize() {
+        let size = prompt("Introduce el tamaño de letra (1-7):");
+        document.execCommand("fontSize", false, size);
+        focusEditor();
+      }
+
+      function setCenter() {
+        document.execCommand("justifyCenter");
+        focusEditor();
+      }
+
+      // Función para cambiar el tipo de letra
+      function changeFont() {
+        const font = document.getElementById("fontSelect").value;
+        document.execCommand("fontName", false, font);
+        focusEditor();
+      }
+
+      function openDocx() {
+        alert("Abrir .docx no está completamente implementado.");
+      }
+
+      function saveAsPDF() {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        doc.text(document.getElementById("editor").innerText, 10, 10);
+        doc.save("documento.pdf");
+      }
+
+      // Función para mantener el foco en el editor después de aplicar un comando
+      function focusEditor() {
+        const editor = document.getElementById("editor");
+        editor.focus();
+      }
+    </script>
+  </body>
+</html>
